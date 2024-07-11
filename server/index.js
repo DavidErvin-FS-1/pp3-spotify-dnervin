@@ -12,7 +12,7 @@ app.use(cors())
 app.use(express.json())
 
 app.get('/', (req, res) => {
-  res.send('Spotify API server is running.. API still in development')
+  res.send('Spotify API server is running..')
 })
 
 // Routes
