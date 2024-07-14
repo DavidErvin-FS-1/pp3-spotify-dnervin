@@ -20,69 +20,79 @@ const login = async (req, res) => {
 
 // Callback route to get the access token
 const callback = async (req, res) => {
-  const code = req.query.code || null
+  try {
+    const code = req.query.code || null
 
-  // Set the request options
-  const authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: {
-      code: code,
-      redirect_uri: REDIRECT_URI,
-      grant_type: 'authorization_code',
-    },
-    headers: {
-      Authorization: `Basic ${Buffer.from(
-        `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
-      ).toString('base64')}`,
-    },
-    json: true,
-  }
-
-  // Send a POST request to get the access token
-  const { data } = await axios.post(
-    authOptions.url,
-    authOptions.form,
-    {
-      headers: authOptions.headers,
+    // Set the request options
+    const authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        code: code,
+        redirect_uri: REDIRECT_URI,
+        grant_type: 'authorization_code',
+      },
+      headers: {
+        Authorization: `Basic ${Buffer.from(
+          `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+        ).toString('base64')}`,
+      },
+      json: true,
     }
-  )
 
-  // Redirect the user to the frontend with the access token
-  const uri = process.env.FRONTEND_URI || 'http://localhost:3000'
+    // Send a POST request to get the access token
+    const { data } = await axios.post(
+      authOptions.url,
+      authOptions.form,
+      {
+        headers: authOptions.headers,
+      }
+    )
 
-  res.redirect(`${uri}?access_token=${data.access_token}`)
+    // Redirect the user to the frontend with the access token
+    const uri = process.env.FRONTEND_URI || 'http://localhost:3000'
+
+    res.redirect(`${uri}?access_token=${data.access_token}`)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Server error')
+  }
 }
 
 // Refresh route to get the new access token
 const refresh = async (req, res) => {
-  const refreshToken = req.query.refresh_token
+  try {
+    const refreshToken = req.query.refresh_token
 
-  // Set the request options
-  const authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: {
-      refresh_token: refreshToken,
-      grant_type: 'refresh_token',
-    },
-    headers: {
-      Authorization: `Basic ${Buffer.from(
-        `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
-      ).toString('base64')}`,
-    },
-    json: true,
-  }
-
-  // Send a POST request to get the access token
-  const { data } = await axios.post(
-    authOptions.url,
-    authOptions.form,
-    {
-      headers: authOptions.headers,
+    // Set the request options
+    const authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        refresh_token: refreshToken,
+        grant_type: 'refresh_token',
+      },
+      headers: {
+        Authorization: `Basic ${Buffer.from(
+          `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+        ).toString('base64')}`,
+      },
+      json: true,
     }
-  )
 
-  // Send the access token to the frontend
-  res.send({ access_token: data.access_token })
+    // Send a POST request to get the access token
+    const { data } = await axios.post(
+      authOptions.url,
+      authOptions.form,
+      {
+        headers: authOptions.headers,
+      }
+    )
+
+    // Send the access token to the frontend
+    res.send({ access_token: data.access_token })
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Server error')
+  }
 }
 
 module.exports = {
