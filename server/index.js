@@ -16,6 +16,7 @@ app.get('/', (req, res) => {
 })
 
 // Routes
+app.use('/auth', require('./routes/auth'))
 
 // Start the server
 const port = process.env.PORT
