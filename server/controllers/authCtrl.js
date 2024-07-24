@@ -28,85 +28,90 @@ const login = async (req, res) => {
 const callback = async (req, res) => {
   try {
     const code = req.query.code || null
+    if (!code) {
+      return res.status(400).send('Authorization code is missing')
+    }
 
     //? Set the request options
     const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
-      form: {
+      data: new URLSearchParams({
         code: code,
         redirect_uri: REDIRECT_URI,
         grant_type: 'authorization_code',
-      },
+      }),
       headers: {
         Authorization: `Basic ${Buffer.from(
           `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
         ).toString('base64')}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      json: true,
     }
 
-    //? Send a POST request to get the access token
-    const { data } = await axios.post(
+    const response = await axios.post(
       authOptions.url,
-      authOptions.form,
+      authOptions.data,
       {
         headers: authOptions.headers,
       }
     )
 
-    //? Generate a JWT token
-    const payload = { access_token: data.access_token }
-    const jwtToken = jwt.encode(payload, JWT_SECRET)
+    if (response.status !== 200) {
+      throw new Error('Failed to get access token from Spotify')
+    }
 
-    //? Save the JWT token to user in database
-    const user = await User.findOneAndUpdate(
-      { jwtToken },
-      { upsert: true, new: true }
+    const data = response.data
+    const payload = {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      exp: Math.floor(Date.now() / 1000) + data.expires_in,
+    }
+    const token = jwt.encode(payload, JWT_SECRET)
+
+    // Save token to the user in the database
+    let user = await User.findOneAndUpdate(
+      { jwtToken: token },
+      { jwtToken: token },
+      { new: true, upsert: true }
     )
 
-    //? Redirect the user to the frontend with the access token
-    res.redirect(`${FRONTEND_URI}?access_token=${data.access_token}`)
+    if (!user) {
+      throw new Error('Failed to save token to database')
+    }
+
+    res.redirect(`${FRONTEND_URI}/?token=${token}`)
   } catch (error) {
-    console.error(error)
+    console.error('Error in callback:', error.message)
+    console.error('Stack trace:', error.stack)
     res.status(500).send('Server error')
   }
 }
 
 //? Refresh route to get the new access token
-const refresh = async (req, res) => {
-  try {
-    const refreshToken = req.query.refresh_token
-
-    //? Set the request options
-    const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      form: {
-        refresh_token: refreshToken,
-        grant_type: 'refresh_token',
-      },
-      headers: {
-        Authorization: `Basic ${Buffer.from(
-          `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
-        ).toString('base64')}`,
-      },
-      json: true,
-    }
-
-    //? Send a POST request to get the access token
-    const { data } = await axios.post(
-      authOptions.url,
-      authOptions.form,
-      {
-        headers: authOptions.headers,
-      }
-    )
-
-    //? Send the access token to the frontend
-    res.send({ access_token: data.access_token })
-  } catch (error) {
-    console.error(error)
-    res.status(500).send('Server error')
+const refresh = async (refresh_token) => {
+  const authOptions = {
+    url: 'https://accounts.spotify.com/api/token',
+    data: new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: refresh_token,
+    }),
+    headers: {
+      Authorization: `Basic ${Buffer.from(
+        `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+      ).toString('base64')}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
   }
+
+  const { data } = await axios.post(
+    authOptions.url,
+    authOptions.data,
+    {
+      headers: authOptions.headers,
+    }
+  )
+
+  return data
 }
 
 module.exports = {
