@@ -1,0 +1,59 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  /* background-color: #282c34; */
+  font-size: calc(10px + 2vmin);
+  /* color: white; */
+}
+
+.App-header {
+  /* background-color: #282c34; */
+  min-height: 20vh;
+  max-width: 800px;
+  word-break: break-all;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  /* color: white; */
+}
+
+.App-header h1 {
+  font-size: 1em;
+}
+
+.App-header p {
+  margin: 0 6em;
+  text-align: center;
+}
+
+.App-logo {
+  height: 12vmin;
+  width: 12vmin;
+  pointer-events: none;
+  color: #1db954;
+  animation: App-logo-spin infinite 10s linear;
+}
+
+.App-link {
+  background: #1db954;
+  color: #fff;
+  text-decoration: none;
+  margin-top: 2em;
+  padding: 1rem 2em;
+  border-radius: 2em;
+  font-size: 1em;
+  font-weight: bold;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.App-link:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s;
+}
