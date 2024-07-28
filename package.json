@@ -5,11 +5,13 @@
   "scripts": {
     "install:client": "cd client && npm install",
     "install:server": "cd server && npm install",
-    "install": "npm run install:client && npm run install:server",
-    "start:client": "cd client && npm start",
-    "start:server": "cd server && npm run dev",
-    "start": "npm run start:client && npm run start:server"
+    "install": "concurrently \"npm run install:client\" \"npm run install:server\"",
+    "build:client": "cd client && npm run build",
+    "start": "concurrently \"npm run build:client\" \"cd server && npm run dev\""
   },
   "author": "David Ervin",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
 }
