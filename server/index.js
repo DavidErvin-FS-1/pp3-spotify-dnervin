@@ -14,14 +14,17 @@ app.use(cors({}))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
-// Sample route to test the server is working
-app.get('/', (req, res) => {
-  res.send('Welcome to the Spotify API!')
-})
-
 // Import routes
 app.use('/auth', require('./routes/auth'))
 app.use('/spotify', require('./routes/spotify'))
+
+// Serve the client build
+app.use(express.static('../client/build'))
+
+// Handle client-side routing
+app.get('*', (req, res) => {
+  res.sendFile('index.html', { root: '../client/build' })
+})
 
 // Start the server
 app.listen(port, () => {
