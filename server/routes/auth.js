@@ -54,7 +54,7 @@ router.get('/callback', async (req, res) => {
       response.data
 
     // Check if the token already exists
-    const existingToken = await SpotifyToken.findOne({
+    let existingToken = await SpotifyToken.findOne({
       refresh_token,
     })
 
