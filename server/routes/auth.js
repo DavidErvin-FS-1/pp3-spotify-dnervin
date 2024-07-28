@@ -20,9 +20,16 @@ router.get('/login', (req, res) => {
   const scope = 'user-read-private user-read-email'
   const state = genRandomString(16)
 
-  res.redirect(
-    `https://accounts.spotify.com/authorize?response_type=code&client_id=${SPOTIFY_CLIENT_ID}&scope=${scope}&redirect_uri=${SPOTIFY_REDIRECT_URI}&state=${state}`
-  )
+  try {
+    res
+      .status(200)
+      .redirect(
+        `https://accounts.spotify.com/authorize?response_type=code&client_id=${SPOTIFY_CLIENT_ID}&scope=${scope}&redirect_uri=${SPOTIFY_REDIRECT_URI}&state=${state}`
+      )
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Failed to get the authorization URL')
+  }
 })
 
 // Route to get the Spotify access token
