@@ -1,30 +1,29 @@
-const express = require('express')
-const cors = require('cors')
 const connectDB = require('./configs/db')
-
-// Connect to MongoDB
-connectDB()
-
-// Require dotenv
+const cors = require('cors')
+const express = require('express')
 require('dotenv').config()
 
-// Initialize the app
+// Connect to the database
+connectDB()
+
 const app = express()
+const port = process.env.PORT || 3000
 
 // Middleware
-app.use(cors())
+app.use(cors({}))
+app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
+// Sample route to test the server is working
 app.get('/', (req, res) => {
-  res.send('Spotify API server is running..')
+  res.send('Welcome to the Spotify API!')
 })
 
-// Routes
+// Import routes
 app.use('/auth', require('./routes/auth'))
+app.use('/spotify', require('./routes/spotify'))
 
 // Start the server
-const port = process.env.PORT
-
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
