@@ -20,8 +20,6 @@ router.get('/search', validateJWT, async (req, res) => {
   let { q, type } = req.query
   const { access_token } = req.spotifyToken
 
-  // console.log(q) // artist:eminem
-
   if (!q) {
     return res.status(400).send('No search query provided')
   }
@@ -43,8 +41,6 @@ router.get('/search', validateJWT, async (req, res) => {
     res.json(
       response.data ? response.data[type + 's'].items : response.data
     )
-
-    console.log('Results Retrieved')
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal server error')
