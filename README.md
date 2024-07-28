@@ -15,8 +15,11 @@ This project utilizes [Spotify's Web API](https://developer.spotify.com/document
 Make sure you have Node.js and npm installed on your machine. You can check if you have them installed by running the following commands in your terminal:
 
 ```bash
-node -v
-npm -v
+#Node.js
+node -v # v20.14.0
+
+#NPM
+npm -v # v10.7.0
 ```
 
 Next you will need to clone this repository to your local machine. You can do this by running the following command in your terminal:
@@ -24,25 +27,19 @@ Next you will need to clone this repository to your local machine. You can do th
 ```bash
 git clone https://github.com/DavidErvin-FS-1/pp3-spotify-dnervin.git
 ```
-
-Install the project dependencies by running the following command in the project directory:
-
-```bash
-npm install
-```
-
-Open the project directory in your terminal and run the following command to start the express server:
+Open the project root directory in your terminal and run the following command to install the project dependencies:
 
 ```bash
-cd server & npm start
+npm run install
 ```
 
-or utilize nodemon to run the server in development mode:
+After the dependencies have been installed, you can start the client and server by running the following command:
 
 ```bash
-cd server & npm run dev
+npm run start
 ```
+
+This will start the client on `http://localhost:3000` and the server on `http://localhost:3001`.
 
 ## Links
 
-[http://localhost:3001/](http://localhost:3001/) - Express server
