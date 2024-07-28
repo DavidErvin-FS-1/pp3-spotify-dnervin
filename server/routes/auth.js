@@ -82,7 +82,7 @@ router.get('/callback', async (req, res) => {
     )
 
     // Redirect to the client with the JWT token
-    res.redirect(`http://localhost:3000/?token=${jwtToken}`)
+    res.redirect(`/?token=${jwtToken}`)
   } catch (error) {
     console.error(error)
     res.send('Error occurred while getting the access token')
