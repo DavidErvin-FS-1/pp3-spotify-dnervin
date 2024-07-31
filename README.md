@@ -27,11 +27,13 @@ Next you will need to clone this repository to your local machine. You can do th
 ```bash
 git clone https://github.com/DavidErvin-FS-1/pp3-spotify-dnervin.git
 ```
+
 Open the project root directory in your terminal and run the following command to install the project dependencies:
 
 ```bash
 npm install && npm run install:all
 ```
+
 > This will install concurrently in the root directory and then install the client and server dependencies in their respective directories.
 
 After the dependencies have been installed, you can build the client and start server by running the following command:
@@ -49,6 +51,7 @@ The following links are available for the project:
 > <sup>**Note:** The port number may vary depending on the environment configuration.</sup>
 
 ### API Auth Routes
+
 - [http://localhost:3001/auth/login](http://localhost:3001/auth/login) - Get an access token from Spotify API to use the application features.
 
 - [http://localhost:3001/auth/callback](http://localhost:3001/auth/callback) - Callback URL for Spotify API to redirect to after user authentication.
@@ -56,12 +59,16 @@ The following links are available for the project:
 - [http://localhost:3001/auth/refresh](http://localhost:3001/auth/refresh) - Refresh the access token from Spotify API.
 
 ### API Spotify Routes
+
 - [http://localhost:3001/api/search](http://localhost:3001/api/search) - Search for albums, artists, or tracks.
 
-### Client Routes
-- [http://localhost:3001/*](http://localhost:3001/) - Home page for the web application. Served via static files  from the `client/build` directory.
+### Client Routes (React Web Application)
 
-## Project Structure
+- [http://localhost:3001/\*](http://localhost:3001/) - Home page for the web application. Served via static files from the `client/build` directory.
+
+---
+
+Project Structure
 
 <details>
 <summary>Click to expand</summary>
